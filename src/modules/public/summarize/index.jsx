@@ -28,7 +28,6 @@ const Summarize = () => {
       .then((res) => res.json())
       .then((result) => {
         dispatch(storeSummarry(result?.data));
-        dispatch(storeTopicName(result?.topic_name)); // Dispatch storeTopicName action with the topic name
         setLoading(false);
       });
   };
@@ -67,30 +66,40 @@ const Summarize = () => {
         ) : (
           summarizedData && (
             <div className="summarized-data">
-              <Select
-                options={[
-                  {
-                    value: "eng_summary",
-                    label: "English",
-                  },
-                  { value: "Urdu_summary", label: "Urdu" },
-                ]}
-                defaultValue="eng_summary"
-                onChange={handleChange}
-              />
-
-              <p
-                className="topic-name"
-                style={{ color: "white", fontSize: "20px" }}
-              >
-                Topic Name: {topicName}
-              </p>
+              <div className="topic-wrapper">
+                <p
+                  className="topic-name"
+                  style={{ color: "white", fontSize: "20px" }}
+                >
+                  <b>Topic:</b>{" "}
+                  {selectedLang === "eng_summary"
+                    ? summarizedData?.topic
+                    : summarizedData?.urdu_topic}
+                </p>
+                <Select
+                  options={[
+                    {
+                      value: "eng_summary",
+                      label: "English",
+                    },
+                    { value: "urdu_summary", label: "Urdu" },
+                  ]}
+                  defaultValue="eng_summary"
+                  onChange={handleChange}
+                />
+              </div>
 
               <p className="summary">
                 {selectedLang === "eng_summary"
-                  ? summarizedData.eng_summary
-                  : summarizedData.Urdu_summary}
+                  ? summarizedData?.eng_summary
+                  : summarizedData?.urdu_summary}
               </p>
+              <a
+                href={`https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=${summarizedData?.topic}&btnG=&oq=bluetoot`}
+                target={"_blank"}
+              >
+                References
+              </a>
             </div>
           )
         )}
